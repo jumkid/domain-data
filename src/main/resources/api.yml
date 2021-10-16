@@ -1,0 +1,164 @@
+openapi: 3.0.3
+info:
+  version: v1
+  title: content-vault API
+  description: content-vault RESTFul api for openapi 3.0 in swagger
+  termsOfService: 'https://jumkid.com/terms-of-use'
+  contact:
+    name: Chooli Yip
+    url: jumkid.com
+    email: chooli.yip@gmail.com
+  license:
+    name: Jumkid Public License
+    url: 'http://license.jumkid.com'
+servers:
+  - description: Testing
+    url: 'http://test.jumkid.com'
+  - description: Live production
+    url: 'http://api.jumkid.com'
+tags:
+  - name: v1
+    description: API for version 1.0.0
+  - name: test
+    description: API for test
+security:
+  - bearerAuth: []
+paths:
+  /domaindata:
+    get:
+      tags:
+        - v1
+      operationId: getDomainDataByName
+      description: get domain data by given industry and name
+      parameters:
+        - name: industry
+          in: query
+          required: true
+          description: industry
+          schema:
+            type: string
+        - name: name
+          in: query
+          required: true
+          description: name of domain
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainData'
+    post:
+      tags:
+        - v1
+      operationId: addDomainData
+      description: save a new domaindata
+      parameters:
+        - name: domainData
+          in: query
+          required: true
+          description: domain data
+          schema:
+            $ref: '#/components/schemas/DomainData'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainData'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainData'
+      summary: Add raw DomainData
+
+  '/domaindata/{id}':
+    get:
+      tags:
+        - v1
+      operationId: getDomainData
+      description: get single domaindata
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: domaindata identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainData'
+    delete:
+      tags:
+        - v1
+      operationId: deleteDomainData
+      description: delete single domaindata
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: domaindata identifier
+          schema:
+            type: string
+      responses:
+        '204':
+          description: successfully delete the domaindata by givn id
+
+  '/domaindata/import':
+    post:
+      tags:
+        - v1
+      operationId: import
+      description: import domain data
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                tags:
+                  type: array
+                  format: string
+      responses:
+        '200':
+          description: import domain data in csv format
+          content:
+            application/json:
+              schema:
+                type: integer
+components:
+  schemas:
+    DomainData:
+      description: Model of media file
+      properties:
+        id:
+          type: string
+          example: 1mWG-nQBWmmN0po1BUoG
+        industry:
+          type: string
+          example: automobile
+        name:
+          type: string
+          example: weekday
+        value:
+          type: string
+          example: Monday
+    
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
