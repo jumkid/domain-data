@@ -43,7 +43,7 @@ public class DomainDataServiceImpl implements DomainDataService{
 
         log.debug("Domain data saved with id {}", domainData.getId());
 
-        return domainDataMapper.entityToDTO(domainDataEntity);
+        return domainDataMapper.entityToDto(domainDataEntity);
     }
 
     @Override
