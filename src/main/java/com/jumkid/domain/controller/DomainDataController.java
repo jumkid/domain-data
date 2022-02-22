@@ -48,7 +48,7 @@ public class DomainDataController {
     @ResponseStatus(HttpStatus.OK)
     public Integer importDomainData(@NotNull @RequestParam("file") MultipartFile file) {
         try {
-            return domainDataService.importDomainData(file.getInputStream());
+            return domainDataService.importDomainData(file.getInputStream()).size();
         } catch (IOException e) {
             log.error("Not able to get csv input {}", e.getMessage());
         }

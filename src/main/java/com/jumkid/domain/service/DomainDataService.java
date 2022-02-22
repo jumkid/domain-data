@@ -13,6 +13,6 @@ public interface DomainDataService {
 
     void deleteDomainData(Long domainId);
 
-    Integer importDomainData(InputStream is);
+    List<DomainData> importDomainData(InputStream is);
 
 }

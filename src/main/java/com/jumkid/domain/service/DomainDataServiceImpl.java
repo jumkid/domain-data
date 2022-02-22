@@ -7,10 +7,15 @@ import com.jumkid.domain.service.mapper.DomainDataMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -29,6 +34,7 @@ public class DomainDataServiceImpl implements DomainDataService{
     }
 
     @Override
+    @Cacheable(value = "domain-data")
     public List<DomainData> getDomainData(String industry, String name) {
         List<DomainDataEntity> entities = domainDataRepository.findByIndustryAndNameOrderByValue(industry, name);
 
@@ -38,6 +44,8 @@ public class DomainDataServiceImpl implements DomainDataService{
     }
 
     @Override
+    @Transactional
+    @CachePut(value = "domain-data")
     public DomainData saveDomainData(DomainData domainData) {
         DomainDataEntity domainDataEntity = domainDataRepository.save(domainDataMapper.dtoToEntity(domainData));
 
@@ -56,7 +64,9 @@ public class DomainDataServiceImpl implements DomainDataService{
     }
 
     @Override
-    public Integer importDomainData(InputStream is) {
+    @CacheEvict(value="domain-data", allEntries=true)
+    @Transactional
+    public List<DomainData> importDomainData(InputStream is) {
         log.info("importing domain data");
         List<DomainDataEntity> domainDataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
@@ -74,11 +84,11 @@ public class DomainDataServiceImpl implements DomainDataService{
                 domainDataList = domainDataRepository.saveAll(domainDataList);
             }
             log.info("{} records are imported", domainDataList.size());
-            return domainDataList.size();
+            return domainDataMapper.entitiesToDTOs(domainDataList);
         } catch (IOException e) {
             log.error("Unable to extra data from the import file {}", e.getMessage());
         }
-        return 0;
+        return Collections.emptyList();
     }
 
 }
