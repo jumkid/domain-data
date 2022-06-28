@@ -1,6 +1,7 @@
 package com.jumkid.domain.service;
 
 import com.jumkid.domain.controller.dto.DomainData;
+import com.jumkid.domain.exception.DomainDataNotFoundException;
 import com.jumkid.domain.model.DomainDataEntity;
 import com.jumkid.domain.repository.DomainDataRepository;
 import com.jumkid.domain.service.mapper.DomainDataMapper;
@@ -17,6 +18,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -35,6 +37,17 @@ public class DomainDataServiceImpl implements DomainDataService{
 
     @Override
     @Cacheable(value = "domain-data")
+    public DomainData getDomainData(Long id) {
+        Optional<DomainDataEntity> optional = domainDataRepository.findById(id);
+        if (optional.isPresent()) {
+            return domainDataMapper.entityToDto(optional.get());
+        } else {
+            throw new DomainDataNotFoundException(id);
+        }
+    }
+
+    @Override
+    @Cacheable(value = "domain-data")
     public List<DomainData> getDomainData(String industry, String name) {
         List<DomainDataEntity> entities = domainDataRepository.findByIndustryAndNameOrderByValue(industry, name);
 
@@ -44,17 +57,38 @@ public class DomainDataServiceImpl implements DomainDataService{
     }
 
     @Override
-    @Transactional
-    @CachePut(value = "domain-data")
-    public DomainData saveDomainData(DomainData domainData) {
-        DomainDataEntity domainDataEntity = domainDataRepository.save(domainDataMapper.dtoToEntity(domainData));
+    public DomainData saveDomainData(String industry, String name) {
+        DomainDataEntity entity = DomainDataEntity.builder()
+                .industry(industry)
+                .name(name)
+                .build();
 
-        log.debug("Domain data saved with id {}", domainData.getId());
+        entity = domainDataRepository.save(entity);
+        log.info("save new domain data with id: {}", entity.getDomainId());
 
-        return domainDataMapper.entityToDto(domainDataEntity);
+        return domainDataMapper.entityToDto(entity);
     }
 
     @Override
+    @Transactional
+    @CachePut(value = "domain-data")
+    public DomainData updateDomainData(Long id, DomainData partialDomainData) {
+        Optional<DomainDataEntity> optional = domainDataRepository.findById(id);
+        if (optional.isPresent()) {
+            DomainDataEntity updateEntity = optional.get();
+            domainDataMapper.updateEntityFromDto(partialDomainData, updateEntity);
+
+            updateEntity = domainDataRepository.save(updateEntity);
+            log.debug("Updated domain data with id {}", id);
+
+            return domainDataMapper.entityToDto(updateEntity);
+        } else {
+            throw new DomainDataNotFoundException(id);
+        }
+    }
+
+    @Override
+    @CacheEvict(value = "domain-data")
     public void deleteDomainData(Long domainId) {
         try {
             domainDataRepository.deleteById(domainId);

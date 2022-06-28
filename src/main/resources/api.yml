@@ -1,8 +1,8 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   version: v1
-  title: content-vault API
-  description: content-vault RESTFul api for openapi 3.0 in swagger
+  title: domain-data API
+  description: domain-data RESTFul api for openapi 3.1.0
   termsOfService: 'https://jumkid.com/terms-of-use'
   contact:
     name: Chooli Yip
@@ -13,7 +13,7 @@ info:
     url: 'http://license.jumkid.com'
 servers:
   - description: Testing
-    url: 'http://test.jumkid.com'
+    url: 'http://localhost:8083'
   - description: Live production
     url: 'http://api.jumkid.com'
 tags:
@@ -21,49 +21,57 @@ tags:
     description: API for version 1.0.0
   - name: test
     description: API for test
-security:
-  - bearerAuth: []
 paths:
-  /domaindata:
+  '/domaindata':
     get:
       tags:
         - v1
       operationId: getDomainDataByName
       description: get domain data by given industry and name
+      security:
+        - Authorization: []
       parameters:
-        - name: industry
-          in: query
-          required: true
-          description: industry
-          schema:
-            type: string
-        - name: name
-          in: query
-          required: true
-          description: name of domain
-          schema:
-            type: string
+        - $ref: '#/components/parameters/industry'
+        - $ref: '#/components/parameters/name'
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/DomainData'
+          $ref: '#/components/responses/200-domaindata-list'
     post:
       tags:
         - v1
       operationId: addDomainData
       description: save a new domaindata
+      security:
+        - Authorization: []
       parameters:
-        - name: domainData
-          in: query
-          required: true
-          description: domain data
-          schema:
-            $ref: '#/components/schemas/DomainData'
+        - $ref: '#/components/parameters/industry'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/value'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-domaindata'
+      summary: Add raw DomainData
+  '/domaindata/{id}':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      tags:
+        - v1
+      operationId: getDomainData
+      description: get single domaindata
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          $ref: '#/components/responses/200-domaindata'
+    put:
+      tags:
+        - v1
+        - test
+      operationId: updateDomainData
+      description: update domaindata by id
+      security:
+        - Authorization: []
       requestBody:
         content:
           application/json:
@@ -71,55 +79,25 @@ paths:
               $ref: '#/components/schemas/DomainData'
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DomainData'
-      summary: Add raw DomainData
-
-  '/domaindata/{id}':
-    get:
-      tags:
-        - v1
-      operationId: getDomainData
-      description: get single domaindata
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: domaindata identifier
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DomainData'
+          $ref: '#/components/responses/200-domaindata'
     delete:
       tags:
         - v1
       operationId: deleteDomainData
       description: delete single domaindata
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: domaindata identifier
-          schema:
-            type: string
+      security:
+        - Authorization: []
       responses:
         '204':
           description: successfully delete the domaindata by givn id
-
-  '/domaindata/import':
+  /domaindata/import:
     post:
       tags:
         - v1
       operationId: import
       description: import domain data
+      security:
+        - Authorization: []
       requestBody:
         content:
           multipart/form-data:
@@ -129,9 +107,6 @@ paths:
                 file:
                   type: string
                   format: binary
-                tags:
-                  type: array
-                  format: string
       responses:
         '200':
           description: import domain data in csv format
@@ -156,9 +131,52 @@ components:
         value:
           type: string
           example: Monday
-    
   securitySchemes:
-    bearerAuth:
+    Authorization:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  parameters:
+    industry:
+      name: industry
+      in: query
+      required: false
+      schema:
+        type: string
+    name:
+      name: name
+      in: query
+      required: false
+      schema:
+        type: string
+    value:
+      name: value
+      in: query
+      required: false
+      schema:
+        type: string
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: number
+  responses:
+    200-domaindata:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            items:
+              $ref: '#/components/schemas/DomainData'
+    200-domaindata-list:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/responses/200-domaindata'
+security:
+  - Authorization: []

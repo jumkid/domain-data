@@ -7,11 +7,15 @@ import java.util.List;
 
 public interface DomainDataService {
 
+    DomainData getDomainData(Long id);
+
     List<DomainData> getDomainData(String industry, String name);
 
-    DomainData saveDomainData(DomainData domainData);
+    DomainData saveDomainData(String industry, String name);
 
-    void deleteDomainData(Long domainId);
+    DomainData updateDomainData(Long id, DomainData partialDomainData);
+
+    void deleteDomainData(Long id);
 
     List<DomainData> importDomainData(InputStream is);
 

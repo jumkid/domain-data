@@ -34,14 +34,22 @@ public class DomainDataController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public DomainData saveDomainData(@RequestBody DomainData domainData) {
-        return domainDataService.saveDomainData(domainData);
+    public DomainData saveDomainData(@RequestParam @NotBlank String industry,
+                                     @RequestParam @NotBlank String name) {
+        return domainDataService.saveDomainData(industry, name);
     }
 
-    @DeleteMapping("{domainId}")
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public DomainData updateDomainData(@PathVariable @NotBlank Long id,
+                                       @RequestBody DomainData domainData) {
+        return domainDataService.updateDomainData(id, domainData);
+    }
+
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDomainData(@PathVariable @NotBlank Long domainId){
-        domainDataService.deleteDomainData(domainId);
+    public void deleteDomainData(@PathVariable @NotBlank Long id){
+        domainDataService.deleteDomainData(id);
     }
 
     @PostMapping("/import")
