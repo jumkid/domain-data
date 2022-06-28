@@ -35,8 +35,9 @@ public class DomainDataController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public DomainData saveDomainData(@RequestParam @NotBlank String industry,
-                                     @RequestParam @NotBlank String name) {
-        return domainDataService.saveDomainData(industry, name);
+                                     @RequestParam @NotBlank String name,
+                                     @RequestParam @NotBlank String value) {
+        return domainDataService.saveDomainData(industry, name, value);
     }
 
     @PutMapping("{id}")

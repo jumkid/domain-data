@@ -57,10 +57,11 @@ public class DomainDataServiceImpl implements DomainDataService{
     }
 
     @Override
-    public DomainData saveDomainData(String industry, String name) {
+    public DomainData saveDomainData(String industry, String name, String value) {
         DomainDataEntity entity = DomainDataEntity.builder()
                 .industry(industry)
                 .name(name)
+                .value(value)
                 .build();
 
         entity = domainDataRepository.save(entity);

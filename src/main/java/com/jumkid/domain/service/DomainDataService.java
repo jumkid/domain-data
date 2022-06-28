@@ -11,7 +11,7 @@ public interface DomainDataService {
 
     List<DomainData> getDomainData(String industry, String name);
 
-    DomainData saveDomainData(String industry, String name);
+    DomainData saveDomainData(String industry, String name, String value);
 
     DomainData updateDomainData(Long id, DomainData partialDomainData);
 
