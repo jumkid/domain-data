@@ -25,6 +25,12 @@ public class DomainDataController {
         this.domainDataService = domainDataService;
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public DomainData getDomainData(@PathVariable @NotBlank Long id) {
+        return domainDataService.getDomainData(id);
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<DomainData> getDomainData(@RequestParam @NotBlank String industry,
@@ -40,14 +46,14 @@ public class DomainDataController {
         return domainDataService.saveDomainData(industry, name, value);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public DomainData updateDomainData(@PathVariable @NotBlank Long id,
                                        @RequestBody DomainData domainData) {
         return domainDataService.updateDomainData(id, domainData);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDomainData(@PathVariable @NotBlank Long id){
         domainDataService.deleteDomainData(id);
