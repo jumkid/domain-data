@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestControllerAdvice
 @Slf4j
@@ -38,7 +40,17 @@ public class ExceptionHandlingAdvice {
         return CustomErrorResponse.builder()
                 .timestamp(Calendar.getInstance().getTime())
                 .property(List.of(ex.getParameterName()))
-                .details(List.of(ex.getMessage()))
+                .details(List.of(Objects.requireNonNull(ex.getMessage())))
+                .build();
+    }
+
+    @ExceptionHandler({DomainDataNotFoundException.class})
+    @ResponseStatus(NOT_FOUND)
+    public CustomErrorResponse handleDomainDataNotFoundException(DomainDataNotFoundException ex) {
+        log.warn("Domain data is not found", ex);
+        return CustomErrorResponse.builder()
+                .timestamp(Calendar.getInstance().getTime())
+                .message(ex.getMessage())
                 .build();
     }
 }

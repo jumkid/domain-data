@@ -36,7 +36,7 @@ public class DomainDataServiceImpl implements DomainDataService{
     }
 
     @Override
-    @Cacheable(value = "domain-data")
+    @Cacheable(key = "#id", value = "domain-data")
     public DomainData getDomainData(Long id) {
         Optional<DomainDataEntity> optional = domainDataRepository.findById(id);
         if (optional.isPresent()) {
@@ -47,7 +47,7 @@ public class DomainDataServiceImpl implements DomainDataService{
     }
 
     @Override
-    @Cacheable(value = "domain-data")
+    @Cacheable(key = "#industry+#name", value = "domain-data")
     public List<DomainData> getDomainData(String industry, String name) {
         List<DomainDataEntity> entities = domainDataRepository.findByIndustryAndNameOrderByValue(industry, name);
 
@@ -57,6 +57,7 @@ public class DomainDataServiceImpl implements DomainDataService{
     }
 
     @Override
+    @CacheEvict(value = "domain-data", allEntries = true)
     public DomainData saveDomainData(String industry, String name, String value) {
         DomainDataEntity entity = DomainDataEntity.builder()
                 .industry(industry)
@@ -72,7 +73,7 @@ public class DomainDataServiceImpl implements DomainDataService{
 
     @Override
     @Transactional
-    @CachePut(value = "domain-data")
+    @CacheEvict(value = "domain-data", allEntries = true)
     public DomainData updateDomainData(Long id, DomainData partialDomainData) {
         Optional<DomainDataEntity> optional = domainDataRepository.findById(id);
         if (optional.isPresent()) {
@@ -89,17 +90,19 @@ public class DomainDataServiceImpl implements DomainDataService{
     }
 
     @Override
-    @CacheEvict(value = "domain-data")
-    public void deleteDomainData(Long domainId) {
+    @CacheEvict(value = "domain-data", allEntries = true)
+    public Boolean deleteDomainData(Long id) {
         try {
-            domainDataRepository.deleteById(domainId);
+            domainDataRepository.deleteById(id);
+            return true;
         } catch (Exception e){
-            log.error("failed to delete domain data by id {} due to {}", domainId, e.getMessage());
+            log.error("failed to delete domain data by id {} due to {}", id, e.getMessage());
+            return false;
         }
     }
 
     @Override
-    @CacheEvict(value="domain-data", allEntries=true)
+    @CacheEvict(value = "domain-data", allEntries = true)
     @Transactional
     public List<DomainData> importDomainData(InputStream is) {
         log.info("importing domain data");

@@ -89,7 +89,12 @@ paths:
         - Authorization: []
       responses:
         '204':
-          description: successfully delete the domaindata by givn id
+          description: Example response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommonResponse'
+          
   /domaindata/import:
     post:
       tags:
@@ -131,6 +136,17 @@ components:
         value:
           type: string
           example: Monday
+    CommonResponse:
+      description: common response
+      properties:
+        success:
+          type: boolean
+        errorCode:
+          type: string
+        msg:
+          type: string
+        data:
+          type: object      
   securitySchemes:
     Authorization:
       type: http

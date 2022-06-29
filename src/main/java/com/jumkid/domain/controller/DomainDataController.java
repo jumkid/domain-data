@@ -2,6 +2,7 @@ package com.jumkid.domain.controller;
 
 import com.jumkid.domain.controller.dto.DomainData;
 import com.jumkid.domain.service.DomainDataService;
+import com.jumkid.share.controller.response.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,8 +56,9 @@ public class DomainDataController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDomainData(@PathVariable @NotBlank Long id){
-        domainDataService.deleteDomainData(id);
+    public CommonResponse deleteDomainData(@PathVariable @NotBlank Long id){
+        Boolean deleted = domainDataService.deleteDomainData(id);
+        return CommonResponse.builder().success(deleted).build();
     }
 
     @PostMapping("/import")

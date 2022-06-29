@@ -15,7 +15,7 @@ public interface DomainDataService {
 
     DomainData updateDomainData(Long id, DomainData partialDomainData);
 
-    void deleteDomainData(Long id);
+    Boolean deleteDomainData(Long id);
 
     List<DomainData> importDomainData(InputStream is);
 
