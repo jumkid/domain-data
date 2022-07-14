@@ -21,7 +21,9 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class MethodLoggingConfig extends AbstractMethodLoggingConfig {
 
     @Pointcut("execution(* com.jumkid.domain.service.DomainDataService.*(..))")
-    public void monitor() { }
+    public void monitor() {
+        //void
+    }
 
     @Before("execution(* com.jumkid.domain.controller.*Controller.*(..))")
     public void log4AllControllers(JoinPoint joinPoint) {
