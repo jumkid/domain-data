@@ -15,7 +15,7 @@
 	<description>Domain data management service</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 
 		<!-- jumkid essentials -->
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
