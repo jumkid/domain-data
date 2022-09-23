@@ -6,6 +6,7 @@ import com.jumkid.share.controller.response.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,12 +29,14 @@ public class DomainDataController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('GUEST_ROLE', 'USER_ROLE', 'ADMIN_ROLE')")
     public DomainData getDomainData(@PathVariable @NotBlank Long id) {
         return domainDataService.getDomainData(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('GUEST_ROLE', 'USER_ROLE', 'ADMIN_ROLE')")
     public List<DomainData> getDomainData(@RequestParam @NotBlank String industry,
                                           @RequestParam @NotBlank String name) {
         return domainDataService.getDomainData(industry, name);
@@ -41,6 +44,7 @@ public class DomainDataController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public DomainData saveDomainData(@RequestParam @NotBlank String industry,
                                      @RequestParam @NotBlank String name,
                                      @RequestParam @NotBlank String value) {
@@ -49,6 +53,7 @@ public class DomainDataController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public DomainData updateDomainData(@PathVariable @NotBlank Long id,
                                        @RequestBody DomainData domainData) {
         return domainDataService.updateDomainData(id, domainData);
@@ -56,6 +61,7 @@ public class DomainDataController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public CommonResponse deleteDomainData(@PathVariable @NotBlank Long id){
         Boolean deleted = domainDataService.deleteDomainData(id);
         return CommonResponse.builder().success(deleted).build();
@@ -63,6 +69,7 @@ public class DomainDataController {
 
     @PostMapping("/import")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public Integer importDomainData(@NotNull @RequestParam("file") MultipartFile file) {
         try {
             return domainDataService.importDomainData(file.getInputStream()).size();

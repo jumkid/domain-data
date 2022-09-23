@@ -7,6 +7,8 @@ COPY src/main/resources/application.${env}.properties /opt/domain-data/applicati
 COPY target/domain-data-*.jar /opt/domain-data/domain-data.jar
 RUN ln -sf /dev/stdout /opt/domain-data/log/domain-data.sys.log
 
-CMD ["java", "-jar", "/opt/domain-data/domain-data.jar", "--spring.config.additional-location=/opt/domain-data/application.properties"]
+WORKDIR /opt/domain-data
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar domain-data.jar --spring.config.additional-location=application.properties"]
 
 EXPOSE 8083
