@@ -140,10 +140,10 @@
 			</resource>
 
 			<resource>
-				<filtering>true</filtering>
-				<directory>public</directory>
+				<filtering>false</filtering>
+				<directory>${basedir}</directory>
 				<includes>
-					<include>*.*</include>
+					<include>public/**</include>
 				</includes>
 			</resource>
 		</resources>

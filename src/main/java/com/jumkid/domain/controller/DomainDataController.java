@@ -29,14 +29,12 @@ public class DomainDataController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyAuthority('GUEST_ROLE', 'USER_ROLE', 'ADMIN_ROLE')")
     public DomainData getDomainData(@PathVariable @NotBlank Long id) {
         return domainDataService.getDomainData(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyAuthority('GUEST_ROLE', 'USER_ROLE', 'ADMIN_ROLE')")
     public List<DomainData> getDomainData(@RequestParam @NotBlank String industry,
                                           @RequestParam @NotBlank String name) {
         return domainDataService.getDomainData(industry, name);
