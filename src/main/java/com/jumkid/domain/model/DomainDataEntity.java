@@ -2,10 +2,10 @@ package com.jumkid.domain.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "domain")
+@Table(name = "domain_industry")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,10 +21,10 @@ public class DomainDataEntity {
     @Column(name = "industry")
     private String industry;
 
-    @Column(name = "name")
+    @Column(name = "domain_name")
     private String name;
 
-    @Column(name = "value")
+    @Column(name = "domain_value")
     private String value;
 
 }

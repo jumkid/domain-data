@@ -2,11 +2,11 @@
 FROM openjdk:17-oracle
 ARG env
 # local file storage path
-RUN mkdir -p /opt/domain-data/log
+RUN mkdir -p /opt/domain-data/logs
 COPY src/main/resources/application.${env}.properties /opt/domain-data/application.properties
 COPY target/domain-data-*.jar /opt/domain-data/domain-data.jar
-RUN ln -sf /dev/stdout /opt/domain-data/log/domain-data.sys.log
 
+RUN ln -sf /dev/stdout /opt/domain-data/logs/domain-data.sys.log
 WORKDIR /opt/domain-data
 
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar domain-data.jar --spring.config.additional-location=application.properties"]
