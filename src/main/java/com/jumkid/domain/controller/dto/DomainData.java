@@ -1,16 +1,15 @@
 package com.jumkid.domain.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
-@NoArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@Builder
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class DomainData {
 
