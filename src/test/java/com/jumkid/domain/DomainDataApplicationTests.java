@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jumkid.domain.controller.dto.DomainData;
 import com.jumkid.domain.service.DomainDataService;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +32,10 @@ class DomainDataApplicationTests {
 	@Autowired
 	private DomainDataService domainDataService;
 
-	private static boolean isSetup = false;
-
 	@BeforeAll
 	void setup() {
-		if (!isSetup) {
-			domainDataService.saveDomainData("dummy industry", "dummy name", "dummy 1");
-			domainDataService.saveDomainData("dummy industry", "dummy name", "dummy 2");
-			isSetup = true;
-		}
+		domainDataService.saveDomainData("dummy industry", "dummy name", "dummy 1");
+		domainDataService.saveDomainData("dummy industry", "dummy name", "dummy 2");
 	}
 
 	@Test
