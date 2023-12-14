@@ -29,7 +29,7 @@ public class DomainDataController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public DomainData getDomainData(@PathVariable @NotBlank Long id) {
+    public DomainData getDomainData(@PathVariable @NotNull Long id) {
         return domainDataService.getDomainData(id);
     }
 
@@ -52,7 +52,7 @@ public class DomainDataController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('ADMIN_ROLE')")
-    public DomainData updateDomainData(@PathVariable @NotBlank Long id,
+    public DomainData updateDomainData(@PathVariable @NotNull Long id,
                                        @RequestBody DomainData domainData) {
         return domainDataService.updateDomainData(id, domainData);
     }
@@ -60,7 +60,7 @@ public class DomainDataController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ADMIN_ROLE')")
-    public CommonResponse deleteDomainData(@PathVariable @NotBlank Long id){
+    public CommonResponse deleteDomainData(@PathVariable @NotNull Long id){
         Boolean deleted = domainDataService.deleteDomainData(id);
         return CommonResponse.builder().success(deleted).build();
     }
