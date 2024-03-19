@@ -50,7 +50,7 @@ public class DomainDataController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @PreAuthorize("hasAuthority('ADMIN_ROLE')")
     public DomainData updateDomainData(@PathVariable @NotNull Long id,
                                        @RequestBody DomainData domainData) {

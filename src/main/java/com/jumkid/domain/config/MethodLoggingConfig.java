@@ -20,20 +20,20 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @Aspect
 public class MethodLoggingConfig extends AbstractMethodLoggingConfig {
 
+    @Override
     @Pointcut("execution(* com.jumkid.domain.service.DomainDataService.*(..))")
-    public void monitor() {
-        //void
-    }
+    public void monitorPointCut() { /* empty method */ }
 
+    @Override
     @Before("execution(* com.jumkid.domain.controller.*Controller.*(..))")
-    public void log4AllControllers(JoinPoint joinPoint) {
+    public void controllerJoinPoint(JoinPoint joinPoint) {
         super.log(joinPoint);
     }
 
     @Bean
     public Advisor performanceMonitorAdvisor() {
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
-        pointcut.setExpression("com.jumkid.domain.config.MethodLoggingConfig.monitor()");
+        pointcut.setExpression("com.jumkid.domain.config.MethodLoggingConfig.monitorPointCut()");
         return new DefaultPointcutAdvisor(pointcut, new CustomPerformanceMonitorInterceptor(false));
     }
 
