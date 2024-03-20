@@ -1,3 +1,5 @@
+TRUNCATE TABLE flyway_schema_history;
+
 ALTER TABLE domain_industry AUTO_INCREMENT = 1;
 TRUNCATE TABLE domain_industry;
 

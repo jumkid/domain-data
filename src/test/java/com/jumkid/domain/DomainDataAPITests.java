@@ -5,7 +5,6 @@ import com.jumkid.domain.controller.dto.DomainData;
 import com.jumkid.domain.service.DomainDataService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.parsing.Parser;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,7 +18,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,8 +31,6 @@ class DomainDataAPITests {
 	@LocalServerPort
 	private int port;
 
-	@Autowired
-	private WebApplicationContext webApplicationContext;
 	@Value("${com.jumkid.jwt.test.user-token}")
 	private String testUserToken;
 	@Value("${com.jumkid.jwt.test.admin-token}")
@@ -47,7 +43,6 @@ class DomainDataAPITests {
 	void setup() {
 		try {
 			RestAssured.defaultParser = Parser.JSON;
-			RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
 		} catch (Exception e) {
 			fail();
 		}
