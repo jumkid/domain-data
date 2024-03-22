@@ -4,13 +4,9 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
-@Entity
 @Table(name = "domain_industry")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Entity
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class DomainDataEntity {
 
     @Id
